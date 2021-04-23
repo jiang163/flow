@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="js/datetimepicker/jquery.datetimepicker.css">
+    <!--<link rel="stylesheet" type="text/css" href="js/bootstrap/css/bootstrap.min.css">-->
+    <link rel="stylesheet" type="text/css" href="css/fontawesome-4.2.0_ie7/4.2.0/css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="css/flow.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+	
+    <script type="text/javascript" src="js/flow/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="js/layer/layer.js"></script>
+
+    <!--如果要使用下拉框要引用easyloader js-->
+    <script type="text/javascript" src="js/easyui/easyloader.js"></script>
+    <!-- 日历 -->
+    <script type="text/javascript" src="js/datetimepicker/jquery.datetimepicker.js"></script>
+    <script type="text/javascript" src="js/bootstrap/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="js/flow/raphael-min.js"></script>
+    <script type="text/javascript" src="js/flow/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/flow/myflow.source.js"></script>
+	<script type="text/javascript" src="js/flow/myflow.editors.js"></script>
+    <script type="text/javascript" src="js/flow/myflow.jpdl3.js"></script>
+    <script type="text/javascript" src="js/demo.js"></script>
+    
+    <title>demo</title>
+</head>
+
+<body class="container-fluid">
+    <div id="content">
+        <div id="dtreeTitle">
+            <p class="treeName">任务流程图</p>
+        </div><button type="button" id="detail">查看</button>
+        <div id="treeContent">
+            <div id="myflow_tools">
+                <div class="toolsHeader">
+                    <div id="myflow_tools_handle">工具集</div>
+                    <!--<div class="node" id="save">-->
+                        <!--<div id="myflow_save"><img src="images/flow/save.png" /><span>保存</span></div>-->
+                        <!--<div id="iconCtlSave"><img src="images/flow/close.png"></div>-->
+                    <!--</div>-->
+                </div>
+                <div class="toolsContent">
+                    <div class="node selectable" id="pointer"><img src="images/flow/choose.png" />选择</div>
+                    <div class="node selectable" id="path"><img src="images/flow/line.png" />线</div>
+                    <div class="node state" id="start" type="start"><img src="images/flow/start.png" />开始</div>
+                    <div class="node state" id="task" type="task"><img src="images/flow/action1.png" />任务</div>
+                    <div class="node state" id="fork" type="fork"><img src="images/flow/branch1.png" />并行</div>
+                    <div class="node state" id="decision" type="decision"><img src="images/flow/branch.png" />判定</div>
+                    <div class="node state" id="join" type="join"><img src="images/flow/merge1.png" />聚合</div>
+                    <div class="node state" id="end" type="end"><img src="images/flow/end.png" />结束</div>
+                </div>
+            </div>
+            <div class="btns">
+                <button id="myflow_save" type="button" class="btn-start"><i class="fa fa-save"></i>保存</button>
+                <button type="button" class="btn-start">强制启动</button>
+                <button type="button" class="btn-pause">暂停</button>
+                <button type="button" class="btn-recover">恢复</button>
+                <button type="button" class="btn-stop">强制终止</button>
+                <button type="button" class="" id="startHere" title="选择分支、判定、任务类型的节点可激活该按钮">从此节点开始执行</button>
+            </div>
+            <div id="myflow_props">
+                <div id="myflow_props_handle">属性</div>
+                <table id="props" border="1" width="100%" cellpadding="0" cellspacing="0">
+                </table>
+
+                <div id="colorWrap">
+                    <div class="color">
+                        <span>颜色编辑：</span>
+                        <span id="curColor" style="color:#fff;background-color: #000"></span>
+
+                    </div>
+                    <div id="colorBoard">
+                        <table>
+                        <tbody>
+                            <tr>
+                                <td style="background-color:#ff0000;color:#fff"></td>
+                                <td style="background-color:#ffff25;color:#fff"></td>
+                                <td style="background-color:#00ff41;color:#fff"></td>
+                                <td style="background-color:#00ffff;color:#fff"></td>
+                                <td style="background-color:#0005fd;color:#fff"></td>
+                                <td style="background-color:#ff00f9;color:#fff"></td>
+                                <td style="background-color:#ffffff;color:#000"></td>
+                                <td style="background-color:#efeeec;color:#000"></td>
+                                <td style="background-color:#e7e6e3;color:#000"></td>
+                                <td style="background-color:#e0ddd9;color:#000"></td>
+                                <td style="background-color:#d6d3ce;color:#000"></td>
+                                <td style="background-color:#cdcac4;color:#000"></td>
+                                <td style="background-color:#c4c0ba;color:#000"></td>
+                                <td style="background-color:#b9b4ae;color:#000"></td>
+                                <td style="background-color:#ada9a3;color:#fff"></td>
+                                <td style="background-color:#a29e98;color:#fff"></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#ff0000;color:#fff"></td>
+                                <td style="background-color:#fff000;color:#fff"></td>
+                                <td style="background-color:#009a4b;color:#fff"></td>
+                                <td style="background-color:#00a3e9;color:#fff"></td>
+                                <td style="background-color:#1f267f;color:#fff"></td>
+                                <td style="background-color:#fe006e;color:#fff"></td>
+                                <td style="background-color:#95928c;color:#fff"></td>
+                                <td style="background-color:#898681;color:#fff"></td>
+                                <td style="background-color:#7c7a74;color:#fff"></td>
+                                <td style="background-color:#6e6c68;color:#fff"></td>
+                                <td style="background-color:#63615c;color:#fff"></td>
+                                <td style="background-color:#53524f;color:#fff"></td>
+                                <td style="background-color:#444443;color:#fff"></td>
+                                <td style="background-color:#333433;color:#fff"></td>
+                                <td style="background-color:#222222;color:#fff"></td>
+                                <td style="background-color:#000000;color:#fff"></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#ff9469;color:#fff"></td>
+                                <td style="background-color:#ffaf74;color:#fff"></td>
+                                <td style="background-color:#ffcb80;color:#fff"></td>
+                                <td style="background-color:#fff792;color:#fff"></td>
+                                <td style="background-color:#cbe393;color:#fff"></td>
+                                <td style="background-color:#a1d793;color:#fff"></td>
+                                <td style="background-color:#71cb93;color:#fff"></td>
+                                <td style="background-color:#66cec6;color:#fff"></td>
+                                <td style="background-color:#56d1f4;color:#fff"></td>
+                                <td style="background-color:#7cabd7;color:#fff"></td>
+                                <td style="background-color:#8894c6;color:#fff"></td>
+                                <td style="background-color:#9280b5;color:#fff"></td>
+                                <td style="background-color:#b485b6;color:#fff"></td>
+                                <td style="background-color:#d38bb7;color:#fff"></td>
+                                <td style="background-color:#ff98b9;color:#fff"></td>
+                                <td style="background-color:#ff9593;color:#fff"></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#ff5e33;color:#fff"></td>
+                                <td style="background-color:#ff8841;color:#fff"></td>
+                                <td style="background-color:#ffb149;color:#fff"></td>
+                                <td style="background-color:#fff358;color:#fff"></td>
+                                <td style="background-color:#add663;color:#fff"></td>
+                                <td style="background-color:#65c467;color:#fff"></td>
+                                <td style="background-color:#00b26a;color:#fff"></td>
+                                <td style="background-color:#00b7ad;color:#fff"></td>
+                                <td style="background-color:#00baee;color:#fff"></td>
+                                <td style="background-color:#0088c5;color:#fff"></td>
+                                <td style="background-color:#496dae;color:#fff"></td>
+                                <td style="background-color:#615097;color:#fff"></td>
+                                <td style="background-color:#925497;color:#fff"></td>
+                                <td style="background-color:#c05796;color:#fff"></td>
+                                <td style="background-color:#ff5e95;color:#fff"></td>
+                                <td style="background-color:#ff5e68;color:#fff"></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#ff0000;color:#fff"></td>
+                                <td style="background-color:#ff5500;color:#fff"></td>
+                                <td style="background-color:#ff9000;color:#fff"></td>
+                                <td style="background-color:#fff000;color:#fff"></td>
+                                <td style="background-color:#7fc633;color:#fff"></td>
+                                <td style="background-color:#00ad45;color:#fff"></td>
+                                <td style="background-color:#009a4b;color:#fff"></td>
+                                <td style="background-color:#00a092;color:#fff"></td>
+                                <td style="background-color:#00a3e9;color:#fff"></td>
+                                <td style="background-color:#0069b1;color:#fff"></td>
+                                <td style="background-color:#004995;color:#fff"></td>
+                                <td style="background-color:#1f267f;color:#fff"></td>
+                                <td style="background-color:#69197c;color:#fff"></td>
+                                <td style="background-color:#a50078;color:#fff"></td>
+                                <td style="background-color:#fe006e;color:#fff"></td>
+                                <td style="background-color:#ff0042;color:#fff"></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#bb0000;color:#fff"></td>
+                                <td style="background-color:#bd3d00;color:#fff"></td>
+                                <td style="background-color:#bf6500;color:#fff"></td>
+                                <td style="background-color:#c0a800;color:#fff"></td>
+                                <td style="background-color:#578a23;color:#fff"></td>
+                                <td style="background-color:#007c31;color:#fff"></td>
+                                <td style="background-color:#00703a;color:#fff"></td>
+                                <td style="background-color:#007368;color:#fff"></td>
+                                <td style="background-color:#0076a3;color:#fff"></td>
+                                <td style="background-color:#004c7f;color:#fff"></td>
+                                <td style="background-color:#00326b;color:#fff"></td>
+                                <td style="background-color:#100e5e;color:#fff"></td>
+                                <td style="background-color:#4c005a;color:#fff"></td>
+                                <td style="background-color:#760056;color:#fff"></td>
+                                <td style="background-color:#bc0050;color:#fff"></td>
+                                <td style="background-color:#bb002c;color:#fff"></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#8c0000;color:#fff"></td>
+                                <td style="background-color:#8d2a00;color:#fff"></td>
+                                <td style="background-color:#8e4b00;color:#fff"></td>
+                                <td style="background-color:#8e7e00;color:#fff"></td>
+                                <td style="background-color:#40690f;color:#fff"></td>
+                                <td style="background-color:#006024;color:#fff"></td>
+                                <td style="background-color:#00572a;color:#fff"></td>
+                                <td style="background-color:#005951;color:#fff"></td>
+                                <td style="background-color:#005b7b;color:#fff"></td>
+                                <td style="background-color:#003961;color:#fff"></td>
+                                <td style="background-color:#002453;color:#fff"></td>
+                                <td style="background-color:#060049;color:#fff"></td>
+                                <td style="background-color:#3b0047;color:#fff"></td>
+                                <td style="background-color:#5b0044;color:#fff"></td>
+                                <td style="background-color:#8d0040;color:#fff"></td>
+                                <td style="background-color:#8c0020;color:#fff"></td>
+                            </tr>
+                            <tr id="last-tr">
+                                <td style="background-color:#dac09d;color:#fff"></td>
+                                <td style="background-color:#ae8f73;color:#fff"></td>
+                                <td style="background-color:#846854;color:#fff"></td>
+                                <td style="background-color:#5e4941;color:#fff"></td>
+                                <td style="background-color:#3b302d;color:#fff"></td>
+                                <td style="background-color:#dca669;color:#fff"></td>
+                                <td style="background-color:#c1844b;color:#fff"></td>
+                                <td style="background-color:#a56732;color:#fff"></td>
+                                <td style="background-color:#8b4e20;color:#fff"></td>
+                                <td style="background-color:#733900;color:#fff"></td>
+                                <td style="background-color:#464646;color:#fff"></td>
+                                <td style="background-color:#464646;color:#fff"></td>
+                                <td style="background-color:#464646;color:#fff"></td>
+                                <td style="background-color:#464646;color:#fff"></td>
+                                <td style="background-color:#464646;color:#fff"></td>
+                                <td style="background-color:#464646;color:#fff"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="myflow"></div>
+        </div>
+        </div>
+    </div>
+    <div id="nodePropertyCon" style="display: none">
+        <div class="propertyCon">
+            <div class="group-control">
+                <span>任务名称：</span>
+                <input type="text" name="" id="layerTaskVal"><span class="red">*</span>
+            </div>
+            <div class="group-control">
+                <span>Java类名：</span>
+                <input type="text" name="" placeholder="xxx.yyy.zzz.ClassA" id="layerJavaVal"><span class="red">*</span>
+                <div class="mark">
+                    <label class="labelInfo"><i class="fa fa-question-circle"></i>Class全路径，例如：xxx.yyy.zzz.ClassA</label>
+                </div>
+            </div>
+            <div class="group-control">
+                <span>距开始时间：</span>
+                <input type="text" name="" id="layerStartTime" value="" placeholder="距开始时间" style="width: 50%">
+                <select name="" id="layerStartTimeUnit" class="form-control">
+                    <option value="60">小时</option>
+                    <option value="1">分钟</option>
+                    <option value="1440">天</option>
+                </select>
+            </div>
+            <div class="group-control">
+                <span>任务描述：</span>
+                <input type="text" name="" id="layerTaskMark" value="测试任务">
+            </div>
+            <div class="group-control">
+                <span>任务参数：</span>
+                <input type="text" name="" id="layerTaskParameter" value='{"k1":"v1","k2":"v2"}' placeholder='{"k1":"v1","k2":"v2"}'>
+                <div class="mark">
+                    <label class="labelInfo"><i class="fa fa-question-circle"></i>请输入JSON，如{"k1":"v1","k2":"v2"}</label>
+                </div>
+            </div>
+            <!--<div class="group-control">-->
+                <!--<span>过期时间(秒)：</span>-->
+                <!--<input type="number" name="" id="layerExpirationTime1" value="300">-->
+                <!--<div class="mark">-->
+                    <!--<label class="labelInfo"><i class="fa fa-question-circle"></i>超过该时间未被客户端取走，则报警，并且该任务将不会被取走.</label>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="group-control">-->
+                <!--<span>预估时间(秒)：</span>-->
+                <!--<input type="number" name="" id="layerEstimatedTime1" value="300">-->
+                <!--<div class="mark">-->
+                    <!--<label class="labelInfo"><i class="fa fa-question-circle"></i>任务执行超过该时间，则报警.</label>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="group-control">
+                <span class="contact">联系人：</span>
+                <textarea name="" rows="3" id="layerContact" placeholder="15033562728;jiangliya@jd.com">15033562728;jiangliya@jd.com</textarea>
+                <div class="mark">
+                    <label class="labelInfo"><i class="fa fa-question-circle"></i>可输入e-mail或手机号,请用分号隔开.</label>
+                </div>
+            </div>
+            <div class="group-control">
+                <span>通知时刻：</span>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><input class="taskCheckbox" id="taskNotAccept" type="checkbox" name=""><label for="taskNotAccept">任务未接受</label></td>
+                            <td class="taskCheckboxSub">
+                                <input type="checkbox" name="" value="1" id="taskNotAccept-sms"><label for="taskNotAccept-sms">短信</label>
+                                <input type="checkbox" name="" value="2" id="taskNotAccept-email"><label for="taskNotAccept-email">邮件</label>
+                            </td>
+                            <td><input type="number" name="" id="layerExpirationTime" value="300" placeholder="过期时间(秒)" style="width: 160px">（秒）<span class="red">*</span></td>
+                        </tr>
+                        <tr>
+                            <td><input class="taskCheckbox" id="execTimeOut" type="checkbox" name=""><label for="execTimeOut">超过预估执行时间</label></td>
+                            <td class="taskCheckboxSub">
+                                <input type="checkbox" name="" value="1" id="execTimeOut-sms"><label for="execTimeOut-sms">短信</label>
+                                <input type="checkbox" name="" value="2" id="execTimeOut-email"><label for="execTimeOut-email">邮件</label>
+                            </td>
+                            <td><input type="number" name="" id="layerEstimatedTime" value="300" placeholder="预估时间(秒)" style="width: 160px">（秒）<span class="red">*</span></td>
+                        </tr>
+                        <tr>
+                            <td><input class="taskCheckbox" id="abnormalEnd" type="checkbox" name=""><label for="abnormalEnd">异常结束</label></td>
+                            <td class="taskCheckboxSub" colspan="2">
+                                <input type="checkbox" name="" value="1" id="abnormalEnd-sms"><label for="abnormalEnd-sms">短信</label>
+                                <input type="checkbox" name="" value="2" id="abnormalEnd-email"><label for="abnormalEnd-email">邮件</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input class="taskCheckbox" id="archive" type="checkbox" name=""><label for="archive">存档(子任务也结束)</label></td>
+                            <td class="taskCheckboxSub" colspan="2">
+                                <input type="checkbox" name="" value="1" id="archive-sms"><label for="archive-sms">短信</label>
+                                <input type="checkbox" name="" value="2" id="archive-email"><label for="archive-email">邮件</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="performGroupCon" class="group-control" style="height: 26px">
+                <span>指定IP执行：</span>
+                <div class="execIp panel-group" id="accordion">
+                    【开始节点未选择指定分组】
+                </div>
+            </div>
+
+        </div>  
+    </div>
+    <!--开始节点弹窗-->
+    <div id="startPropertyCon" style="display: none">
+        <div class="propertyCon">
+            <div class="group-control">
+                <span>名称：</span>
+                <input type="text" name="" id="layerStartTaskVal" value="开始" readonly="true">
+            </div>
+            <div class="group-control">
+                <span>定时表达式：</span>
+                <input type="text" name="" id="layerExpressionTime"><span class="red">*</span>
+                <div class="mark">
+                    <label class="labelInfo"><i class="fa fa-question-circle"></i>例如：每天1:00执行，即 <strong>0 0 1 * * ? *</strong> ; 每五分钟执行，即 <strong>0 0/5 * * * ? *</strong> 。</label>
+                </div>
+            </div>
+            <div class="group-control">
+                <span>流程名称：</span>
+                <input type="text" name="" id="layerStartTaskMark"><span class="red">*</span>
+            </div>
+            <div class="group-control">
+                <span class="contact">联系人：</span>
+                <textarea name="" rows="3" id="layerStartContact" placeholder="15033562728;jiangliya@jd.com"></textarea>
+                <div class="mark">
+                    <label class="labelInfo"><i class="fa fa-question-circle"></i>可输入e-mail或手机号,请用分号隔开.</label>
+                </div>
+            </div>
+            <div class="group-control">
+                <span>通知时刻：</span>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><input class="taskCheckbox" id="sabnormalEnd" type="checkbox" name=""><label for="sabnormalEnd">成功完成</label></td>
+                            <td class="taskCheckboxSub">
+                                <input type="checkbox" name="" value="1" id="sabnormalEnd-sms"><label for="sabnormalEnd-sms">短信</label>
+                                <input type="checkbox" name="" value="2" id="sabnormalEnd-email"><label for="sabnormalEnd-email">邮件</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input class="taskCheckbox" id="sarchive" type="checkbox" name=""><label for="sarchive">强制中止</label></td>
+                            <td class="taskCheckboxSub">
+                                <input type="checkbox" name="" value="1" id="sarchive-sms"><label for="sarchive-sms">短信</label>
+                                <input type="checkbox" name="" value="2" id="sarchive-email"><label for="sarchive-email">邮件</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input class="taskCheckbox" id="stop" type="checkbox" name=""><label for="stop">重做中止</label></td>
+                            <td class="taskCheckboxSub">
+                                <input type="checkbox" name="" value="1" id="stop-sms"><label for="stop-sms">短信</label>
+                                <input type="checkbox" name="" value="2" id="stop-email"><label for="stop-email">邮件</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="startPerformGroup" class="group-control" style="height: 26px">
+                <span>指定分组执行：</span>
+                <div class="perform">
+                    <ul>
+                        <!--<li><input type="checkbox" name="" id="sperformGroup1" value="111"><label for="sperformGroup1">111</label></li>-->
+                        <!--<li><input type="checkbox" name="" id="sperformGroup2" value="222"><label for="sperformGroup2">222</label></li>-->
+                        <!--<li><input type="checkbox" name="" id="sperformGroup3" value="333"><label for="sperformGroup3">333</label></li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $("#detail").click(function(){
+                $("#myflow_tools").hide();
+                $("#colorWrap").remove();
+                $("input").attr("readonly",true).css("cursor","no-drop");
+                $("input[type='checkbox']").attr("disabled",true).next("label").css("cursor","no-drop");
+                $("textarea").attr("readonly",true).css("cursor","no-drop");
+            })
+        })
+    </script>
+</body>
+
+</html>
